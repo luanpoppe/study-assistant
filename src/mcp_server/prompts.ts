@@ -1,5 +1,5 @@
 import type { MCPServerPrompts } from "@mastra/mcp";
-import type { Prompt, PromptMessage } from "@modelcontextprotocol/sdk/types.js";
+import type { Prompt } from "@modelcontextprotocol/sdk/types.js";
 import { MCPNamesEnum } from "./types";
 import { mcpPrompts } from "../prompts/mcp.prompt";
 
@@ -54,7 +54,7 @@ export class MCPPrompts {
     },
   };
 
-  static getPromptByVersion(
+  private static getPromptByVersion(
     name: MCPNamesEnum,
     version: `v${number}`,
     args: any
@@ -67,7 +67,7 @@ export class MCPPrompts {
     return prompt;
   }
 
-  static checkIfIsValid(name: string) {
+  private static checkIfIsValid(name: string) {
     const isNameValid = Object.values(MCPNamesEnum).includes(
       name as MCPNamesEnum
     );
