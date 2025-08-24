@@ -26,6 +26,7 @@ export function Header() {
               <p className="text-sm text-gray-600">Powered by AI</p>
             </div>
           </div>
+
           <div className="flex items-center gap-4">
             <LLMSettings
               llmSettings={llmSettings}

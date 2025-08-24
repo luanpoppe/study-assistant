@@ -1,5 +1,4 @@
 import { MCPServer } from "@mastra/mcp";
-import { MCPPrompts } from "./prompts";
 
 import express from "express";
 import crypto from "crypto";
@@ -16,7 +15,6 @@ export class MCP {
       "create-flashcard-tool": CreateFlashcardsTool.execute(),
       "search-web-tool": SearchWebTool.execute(),
     },
-    prompts: MCPPrompts.myPromptHandlers,
   });
 
   private static app = express();
@@ -36,11 +34,11 @@ export class MCP {
 
         console.log("MCP Server ran successfully");
       } catch (err) {
-        console.error("Erro no MCPServer:", err);
-        res.status(500).send("Erro no MCPServer");
+        console.error("MCPServer Error:", err);
+        res.status(500).send("MCPServer Error");
       }
     });
 
-    this.app.listen(8080, () => console.log("Express rodando na porta 8080"));
+    this.app.listen(8080, () => console.log("Express running in port 8080"));
   };
 }
