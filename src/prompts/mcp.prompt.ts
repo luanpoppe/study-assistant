@@ -1,4 +1,4 @@
-import { MCPNamesEnum } from "../mcp_server/types";
+import { MCPNamesEnum } from "../mcp_server/mcp-names-enum";
 import { VersionedPrompts } from "./types";
 
 export const mcpPrompts: Record<MCPNamesEnum, VersionedPrompts> = {

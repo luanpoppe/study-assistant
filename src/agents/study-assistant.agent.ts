@@ -1,13 +1,15 @@
+import "../utils/env";
 import { Agent } from "@mastra/core";
 import { mcpClient } from "../mcp_server/client";
 import { google } from "@ai-sdk/google";
 
-export const agent = new Agent({
+export const studyAgent = new Agent({
   name: "BackendAgent",
   instructions:
     "You are an assistant that uses the available tools to answer questions.",
   model: google("gemini-2.5-flash-lite"),
   tools: async () => {
+    // console.log("await mcpClient.getTools(): ", await mcpClient.getToolsets());
     return await mcpClient.getTools();
   },
 });

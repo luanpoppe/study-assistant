@@ -1,6 +1,6 @@
 import type { MCPServerPrompts } from "@mastra/mcp";
 import type { Prompt } from "@modelcontextprotocol/sdk/types.js";
-import { MCPNamesEnum } from "./types";
+import { MCPNamesEnum } from "./mcp-names-enum";
 import { mcpPrompts } from "../prompts/mcp.prompt";
 
 export class MCPPrompts {
