@@ -5,6 +5,7 @@ import express from "express";
 import crypto from "crypto";
 import { SummarizeTool } from "./tools/summarize.tool";
 import { CreateFlashcardsTool } from "./tools/create-flashcards.tool";
+import { SearchWebTool } from "./tools/search-web.tool";
 
 export class MCP {
   static server = new MCPServer({
@@ -13,6 +14,7 @@ export class MCP {
     tools: {
       "summarizer-tool": SummarizeTool.execute(),
       "create-flashcard-tool": CreateFlashcardsTool.execute(),
+      "search-web-tool": SearchWebTool.execute(),
     },
     prompts: MCPPrompts.myPromptHandlers,
   });
