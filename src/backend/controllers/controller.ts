@@ -7,15 +7,20 @@ export function initialGetController(req: Request, res: Response) {
 }
 
 export async function studyPostController(
-  req: RequestBody<{ message: string }>,
+  req: RequestBody<{
+    message: string;
+    temperature: number;
+    nucleusSampling: number;
+  }>,
   res: Response
 ) {
-  const { message } = req.body;
+  const { message, temperature, nucleusSampling } = req.body;
 
   try {
     const tools = await studyAgent.getTools();
 
     const response = await studyAgent.generateVNext(message, {
+      modelSettings: { temperature, topP: nucleusSampling },
       // // opcional: toolsets disponíveis
       // toolsets: await studyAgent.getTools(),
     });

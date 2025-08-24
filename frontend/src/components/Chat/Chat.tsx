@@ -1,0 +1,179 @@
+import { useGlobalContext } from "@/GlobalContext";
+import { Copy, Loader2, Sparkles, MessageCircle } from "lucide-react";
+import { useState, useRef, type FormEvent } from "react";
+import axios from "axios";
+
+export function Chat() {
+  const { messages, setMessages, llmSettings, setError, error } =
+    useGlobalContext();
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  function copyToClipboard(text: string) {
+    navigator.clipboard?.writeText(text);
+  }
+
+  function scrollToBottom() {
+    setTimeout(() => {
+      ref.current?.scrollTo({
+        top: ref.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }, 50);
+  }
+
+  async function send(messageText: string) {
+    if (!messageText.trim()) return;
+    setError(null);
+    const userMsg: Message = {
+      id: String(Date.now()) + "-u",
+      role: "user",
+      text: messageText,
+    };
+    setMessages((m) => [...m, userMsg]);
+    setInput("");
+    scrollToBottom();
+    setLoading(true);
+
+    try {
+      const res = await axios.post("http://localhost:5000/study", {
+        message: messageText,
+        temperature: llmSettings.temperature,
+        nucleusSampling: llmSettings.nucleusSampling,
+      });
+      const answer = res.data?.answer ?? "No response from server.";
+      const botMsg: Message = {
+        id: String(Date.now()) + "-b",
+        role: "assistant",
+        text: answer,
+      };
+      setMessages((m) => [...m, botMsg]);
+      scrollToBottom();
+    } catch (err: any) {
+      console.error("QA request error", err);
+      setError(
+        err?.response?.data?.error?.message ?? err?.message ?? "Unknown error"
+      );
+      const errMsg: Message = {
+        id: String(Date.now()) + "-e",
+        role: "assistant",
+        text: "Error getting response. See message above.",
+      };
+      setMessages((m) => [...m, errMsg]);
+      scrollToBottom();
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    send(input);
+  }
+
+  return (
+    <div className="max-w-4xl mx-auto p-6">
+      <div
+        ref={ref}
+        className="bg-white/60 backdrop-blur-sm rounded-2xl shadow-lg border border-blue-100 h-96 overflow-auto mb-6 p-6"
+        aria-live="polite"
+      >
+        {messages.length === 0 ? (
+          <div className="h-full flex flex-col items-center justify-center text-center">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-sky-100 rounded-2xl flex items-center justify-center mb-4">
+              <MessageCircle className="w-8 h-8 text-blue-600" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              How can I help you today?
+            </h3>
+            <p className="text-gray-600 max-w-md">
+              Ask a question about your studies and get personalized answers
+              from our AI assistant.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {messages.map((m) => (
+              <div
+                key={m.id}
+                className={`flex gap-4 ${
+                  m.role === "user" ? "justify-end" : "justify-start"
+                }`}
+              >
+                {m.role !== "user" && (
+                  <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-sky-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Sparkles className="w-4 h-4 text-white" />
+                  </div>
+                )}
+                <div
+                  className={`max-w-2xl ${m.role === "user" ? "order-1" : ""}`}
+                >
+                  <div
+                    className={`p-4 rounded-2xl relative group transition-all duration-200 ${
+                      m.role === "user"
+                        ? "bg-gradient-to-br from-blue-500 to-sky-600 text-white ml-auto"
+                        : "bg-white/80 backdrop-blur-sm border border-blue-100 text-gray-900"
+                    }`}
+                  >
+                    <pre className="whitespace-pre-wrap text-sm leading-relaxed m-0 font-sans">
+                      {m.text}
+                    </pre>
+                    <button
+                      aria-label="Copy"
+                      onClick={() => copyToClipboard(m.text)}
+                      className={`absolute top-3 right-3 opacity-0 group-hover:opacity-100 p-1.5 rounded-lg transition-all duration-200 ${
+                        m.role === "user"
+                          ? "hover:bg-white/20 text-white/80 hover:text-white"
+                          : "hover:bg-blue-50 text-gray-400 hover:text-blue-600"
+                      }`}
+                    >
+                      <Copy size={14} />
+                    </button>
+                  </div>
+                </div>
+                {m.role === "user" && (
+                  <div className="w-8 h-8 bg-gradient-to-br from-gray-600 to-gray-700 rounded-full flex items-center justify-center flex-shrink-0 order-2">
+                    <span className="text-white text-sm font-medium">U</span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <form onSubmit={handleSubmit} className="flex gap-3">
+        <div className="flex-1 relative">
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Type your question about your studies..."
+            className="w-full rounded-xl border border-blue-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/80 backdrop-blur-sm transition-all duration-200"
+            disabled={loading}
+          />
+        </div>
+        <button
+          type="submit"
+          className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-sky-600 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-sky-700 disabled:opacity-60 transition-all duration-200 shadow-lg hover:shadow-xl"
+          disabled={loading}
+        >
+          {loading ? <Loader2 className="animate-spin" size={16} /> : "Send"}
+        </button>
+      </form>
+
+      {error && (
+        <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl">
+          <p className="text-sm text-red-700">Erro: {error}</p>
+        </div>
+      )}
+
+      <div className="mt-6 p-4 bg-white/40 backdrop-blur-sm rounded-xl border border-blue-100">
+        <p className="text-xs text-gray-600 text-center">
+          💡 <strong>Tip:</strong> Ask specific questions about your studies to
+          get more precise and useful answers.
+        </p>
+      </div>
+    </div>
+  );
+}
