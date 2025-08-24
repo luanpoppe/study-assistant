@@ -8,7 +8,8 @@ export class SummarizeTool {
   static execute() {
     return createTool({
       id: "summarizer-tool",
-      description: "Summarize the content sent by the user in a structured way",
+      description:
+        "Produce a concise, study-focused summary of the provided content. Organize the output with clear headings, subheadings, and short bullet lists that highlight key concepts, definitions, formulas, examples, and action items. Emphasize information useful for revision and exam preparation, and include suggested study questions or flashcard prompts when appropriate. Keep the summary brief, well-structured, and machine-friendly for downstream processing.",
       inputSchema: z.object({
         message: z.string(),
       }),
@@ -29,7 +30,7 @@ export class SummarizeTool {
   static agent = new Agent({
     name: "Summarizer Agent",
     instructions:
-      "Summarize the content in a structured format, in the markdown format, with topics and sub-topics",
+      "From the provided content, generate a concise, structured summary in English optimized for study and review. Use Markdown with clear headings and subheadings, short bullet lists for key points, definitions, formulas, and examples. Provide 3–5 concise takeaways and, when relevant, suggest up to five flashcard-style Q/A prompts for active recall. Note any contradictions, uncertainties, or prerequisites. Keep sections brief and focused to support rapid revision and programmatic consumption.",
     model: google("gemini-2.5-flash-lite"),
   });
 }

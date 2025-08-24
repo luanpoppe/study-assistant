@@ -3,12 +3,13 @@ import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 import { Agent } from "@mastra/core";
 import { google } from "@ai-sdk/google";
+import { CreateFlashcardsPrompt } from "./create-flashcards.prompt";
 
 export class CreateFlashcardsTool {
   static execute() {
     return createTool({
       id: "create-flashcards-tool",
-      description: "Create a list of flashcards from the content",
+      description: CreateFlashcardsPrompt.description,
       inputSchema: z.object({
         message: z.string(),
       }),
@@ -28,7 +29,7 @@ export class CreateFlashcardsTool {
 
   static agent = new Agent({
     name: "Create Flashcard Agent",
-    instructions: "Create a list of flashcards from the content",
+    instructions: CreateFlashcardsPrompt.instructions,
     model: google("gemini-2.5-flash-lite"),
   });
 }
