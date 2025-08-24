@@ -10,6 +10,13 @@
       "name": "Debug npm start",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "start"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug npm run back",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "back"]
     }
   ]
 }
