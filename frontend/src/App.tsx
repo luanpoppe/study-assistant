@@ -50,7 +50,7 @@ export default function App() {
       const res = await axios.post("http://localhost:5000/study", {
         message: messageText,
       });
-      const answer = res.data?.answer ?? "Sem resposta do servidor.";
+      const answer = res.data?.answer ?? "No response from server.";
       const botMsg: Message = {
         id: String(Date.now()) + "-b",
         role: "assistant",
@@ -61,14 +61,12 @@ export default function App() {
     } catch (err: any) {
       console.error("QA request error", err);
       setError(
-        err?.response?.data?.error?.message ??
-          err?.message ??
-          "Erro desconhecido"
+        err?.response?.data?.error?.message ?? err?.message ?? "Unknown error"
       );
       const errMsg: Message = {
         id: String(Date.now()) + "-e",
         role: "assistant",
-        text: "Erro ao obter resposta. Veja a mensagem acima.",
+        text: "Error getting response. See message above.",
       };
       setMessages((m) => [...m, errMsg]);
       scrollToBottom();
@@ -102,7 +100,7 @@ export default function App() {
               </div>
               <div>
                 <h1 className="text-xl font-semibold text-gray-900">
-                  Assistente de Estudos
+                  Study Assistant
                 </h1>
                 <p className="text-sm text-gray-600">Powered by AI</p>
               </div>
@@ -112,15 +110,15 @@ export default function App() {
                 <button
                   onClick={clearConversation}
                   className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
-                  aria-label="Limpar conversa"
+                  aria-label="Clear conversation"
                 >
                   <Trash2 className="w-4 h-4" />
-                  Limpar
+                  Clear
                 </button>
               )}
               <div className="flex items-center gap-2 text-sm">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-gray-600">Conectado</span>
+                <span className="text-gray-600">Connected</span>
               </div>
             </div>
           </div>
@@ -139,11 +137,11 @@ export default function App() {
                 <MessageCircle className="w-8 h-8 text-blue-600" />
               </div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                Como posso ajudar você hoje?
+                How can I help you today?
               </h3>
               <p className="text-gray-600 max-w-md">
-                Faça uma pergunta sobre seus estudos e receba respostas
-                personalizadas do nosso assistente IA.
+                Ask a question about your studies and get personalized answers
+                from our AI assistant.
               </p>
             </div>
           ) : (
@@ -176,7 +174,7 @@ export default function App() {
                         {m.text}
                       </pre>
                       <button
-                        aria-label="Copiar"
+                        aria-label="Copy"
                         onClick={() => copyToClipboard(m.text)}
                         className={`absolute top-3 right-3 opacity-0 group-hover:opacity-100 p-1.5 rounded-lg transition-all duration-200 ${
                           m.role === "user"
@@ -204,7 +202,7 @@ export default function App() {
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Digite sua pergunta sobre estudos..."
+              placeholder="Type your question about your studies..."
               className="w-full rounded-xl border border-blue-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/80 backdrop-blur-sm transition-all duration-200"
               disabled={loading}
             />
@@ -214,11 +212,7 @@ export default function App() {
             className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-sky-600 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-sky-700 disabled:opacity-60 transition-all duration-200 shadow-lg hover:shadow-xl"
             disabled={loading}
           >
-            {loading ? (
-              <Loader2 className="animate-spin" size={16} />
-            ) : (
-              "Enviar"
-            )}
+            {loading ? <Loader2 className="animate-spin" size={16} /> : "Send"}
           </button>
         </form>
 
@@ -230,8 +224,8 @@ export default function App() {
 
         <div className="mt-6 p-4 bg-white/40 backdrop-blur-sm rounded-xl border border-blue-100">
           <p className="text-xs text-gray-600 text-center">
-            💡 <strong>Dica:</strong> Faça perguntas específicas sobre seus
-            estudos para obter respostas mais precisas e úteis.
+            💡 <strong>Tip:</strong> Ask specific questions about your studies
+            to get more precise and useful answers.
           </p>
         </div>
       </div>
