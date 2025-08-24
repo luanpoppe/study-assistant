@@ -1,0 +1,20 @@
+# Dockerfile.backend - runs the backend Express app (src/backend/app.ts)
+FROM node:18-alpine
+
+# Create app directory
+WORKDIR /app
+
+# Copy package manifests first to leverage Docker cache
+COPY package.json package-lock.json tsconfig.json ./
+
+# Install dependencies (including dev so we can run tsx/typescript in container)
+RUN npm ci
+
+# Copy source
+COPY src ./src
+
+# Expose backend port
+EXPOSE 5000
+
+# Default command: start the backend app using tsx
+CMD ["npx", "tsx", "src/backend/app.ts"]

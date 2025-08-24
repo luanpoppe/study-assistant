@@ -1,0 +1,19 @@
+# Dockerfile.mcp - runs the MCP server (src/index.ts -> src/mcp_server)
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy root manifests so npm ci can use caching
+COPY package.json package-lock.json tsconfig.json ./
+
+# Install dependencies (includes @mastra/mcp etc.)
+RUN npm ci
+
+# Copy source code
+COPY src ./src
+
+# Expose MCP server port
+EXPOSE 8080
+
+# Start the MCP service (uses tsx to run TypeScript directly)
+CMD ["npx", "tsx", "src/index.ts"]

@@ -5,7 +5,8 @@
   "scripts": {
     "start": "npx tsx watch src/index.ts",
     "build": "tsc",
-    "back": "npx tsx watch src/backend/app.ts"
+    "back": "npx tsx watch src/backend/app.ts",
+    "front": "cd frontend && npm start"
   },
   "keywords": [],
   "author": "",

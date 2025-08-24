@@ -1,0 +1,25 @@
+# Dockerfile.frontend - multi-stage build for the Vite React app (frontend/)
+FROM node:18-alpine AS builder
+
+WORKDIR /app
+
+# Copy package files and install deps
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm ci
+
+# Copy frontend source and build
+COPY frontend ./
+RUN npm run build
+
+# Serve with nginx
+FROM nginx:alpine
+
+# Remove default nginx content and copy built app
+RUN rm -rf /usr/share/nginx/html/*
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Expose HTTP port
+EXPOSE 80
+
+# Run nginx in foreground
+CMD ["nginx", "-g", "daemon off;"]
