@@ -1,5 +1,5 @@
 # Dockerfile.backend - runs the backend Express app (src/backend/app.ts)
-FROM node:18-alpine
+FROM node:18-bullseye-slim
 
 # Create app directory
 WORKDIR /app
