@@ -1,6 +1,7 @@
 import { Brain, Trash2 } from "lucide-react";
 import { LLMSettings } from "./LLMSettings";
 import { useGlobalContext } from "@/GlobalContext";
+import { ConversationIdLocalStorage } from "@/lib/local-storage/conversation-id.local-storage";
 
 export function Header() {
   const { messages, llmSettings, setLLMSettings, setMessages, setError } =
@@ -9,6 +10,7 @@ export function Header() {
   function clearConversation() {
     setMessages([]);
     setError(null);
+    ConversationIdLocalStorage.set();
   }
 
   return (

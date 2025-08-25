@@ -2,6 +2,8 @@ import { useGlobalContext } from "@/GlobalContext";
 import { Copy, Loader2, Sparkles, MessageCircle } from "lucide-react";
 import { useState, useRef, type FormEvent } from "react";
 import axios from "axios";
+import { UserIdLocalStorage } from "@/lib/local-storage/user-id.local-storage";
+import { ConversationIdLocalStorage } from "@/lib/local-storage/conversation-id.local-storage";
 
 export function Chat() {
   const { messages, setMessages, llmSettings, setError, error } =
@@ -37,11 +39,20 @@ export function Chat() {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:5000/study", {
-        message: messageText,
-        temperature: llmSettings.temperature,
-        nucleusSampling: llmSettings.nucleusSampling,
-      });
+      const res = await axios.post(
+        "http://localhost:5000/study",
+        {
+          message: messageText,
+          temperature: llmSettings.temperature,
+          nucleusSampling: llmSettings.nucleusSampling,
+        },
+        {
+          headers: {
+            userid: UserIdLocalStorage.get(),
+            conversationid: ConversationIdLocalStorage.get(),
+          },
+        }
+      );
       const answer = res.data?.answer ?? "No response from server.";
       const botMsg: Message = {
         id: String(Date.now()) + "-b",

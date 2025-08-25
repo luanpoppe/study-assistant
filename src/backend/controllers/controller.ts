@@ -15,22 +15,26 @@ export async function studyPostController(
   res: Response
 ) {
   const { message, temperature, nucleusSampling } = req.body;
+  const userId = req.headers.userid as string;
+  const conversationId = req.headers.conversationid as string;
 
   try {
-    const tools = await studyAgent.getTools();
-
     const response = await studyAgent.generateVNext(message, {
       modelSettings: { temperature, topP: nucleusSampling },
       memory: {
-        resource: "teste-123",
-        thread: "abc",
+        resource: userId,
+        thread: conversationId,
       },
 
       // // opcional: toolsets disponíveis
       // toolsets: await studyAgent.getTools(),
     });
 
-    res.json({ answer: response.text });
+    res.json({
+      answer:
+        response.text ??
+        "The model answered with a empty text. Try asking your question again",
+    });
   } catch (err) {
     console.error("Error in initialPostController:", err);
     res.status(500).json({ error: err });
