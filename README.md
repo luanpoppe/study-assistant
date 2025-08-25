@@ -4,8 +4,6 @@ This repository showcases a complete, **end-to-end full-stack project**: an AI-p
 
 More than just a script, this is a fully functional application that highlights proven skills in system architecture, AI agent implementation, and the communication patterns between distinct, independently running services.
 
-[Image of the AI Study Assistant UI]
-
 ---
 
 ## ✨ Key Features
