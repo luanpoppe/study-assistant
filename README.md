@@ -45,8 +45,6 @@ This decoupled design makes the system highly modular. For example, a new tool c
 
 ---
 
----
-
 ## 💡 Implementation Highlights
 
 This project was an exercise in building a robust, maintainable AI application. Here are some key decisions I made:
