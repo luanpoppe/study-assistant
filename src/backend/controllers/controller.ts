@@ -21,6 +21,11 @@ export async function studyPostController(
 
     const response = await studyAgent.generateVNext(message, {
       modelSettings: { temperature, topP: nucleusSampling },
+      memory: {
+        resource: "teste-123",
+        thread: "abc",
+      },
+
       // // opcional: toolsets disponíveis
       // toolsets: await studyAgent.getTools(),
     });
