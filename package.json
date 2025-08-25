@@ -15,6 +15,7 @@
   "dependencies": {
     "@ai-sdk/google": "^2.0.8",
     "@mastra/core": "^0.14.1",
+    "@mastra/fastembed": "^0.10.3",
     "@mastra/libsql": "^0.13.4",
     "@mastra/mcp": "^0.10.12",
     "@mastra/memory": "^0.13.1",
